@@ -9,13 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     let currentLanguage = 'en';
     let lastResult = '';
-    let accuracy = '+85';
-
-    if (screen.orientation) {
-        screen.orientation.lock('portrait').catch(function(error) {
-            console.error('Orientation lock failed:', error);
-        });
-    }
+    let accuracy = '?';
+    let cooldownEndTime = 0;
+    let isCooldownActive = false;
+    let isTailsUp = false;
 
     const translations = {
         ru: {
@@ -89,22 +86,37 @@ document.addEventListener('DOMContentLoaded', () => {
             countdownElement.innerText = `${translations[currentLanguage].countdown} ${secondsLeft}s`;
             flipButton.disabled = true;
             flipButton.classList.add('disabled');
+            isCooldownActive = true;
         } else {
-            progressBar.style.width = '0%';
+            progressBar.style.width = '100%';
             countdownElement.innerText = `${translations[currentLanguage].countdown} 0s`;
             flipButton.disabled = false;
             flipButton.classList.remove('disabled');
+            isCooldownActive = false;
         }
     }
 
-    const toggleDropdown = () => {
+    function updateLanguage(lang) {
+        const translation = translations[lang];
+        document.getElementById('status').innerText = lastResult ? (lastResult === 'heads' ? translation.heads : translation.tails) : translation.status;
+        document.getElementById('flip').innerText = translation.flip;
+        updateSignalAccuracy();
+
+        if (isCooldownActive) {
+            flipButton.disabled = true;
+            flipButton.classList.add('disabled');
+        }
+        updateCountdown();
+    }
+
+    function toggleDropdown() {
         if (!languageDropdown.classList.contains('show')) {
             languageDropdown.classList.add('show');
         } else {
             languageDropdown.classList.remove('show');
             languageDropdown.style.display = 'none';
         }
-    };
+    }
 
     languageIcon.addEventListener('click', (event) => {
         event.stopPropagation();
@@ -140,40 +152,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    function updateLanguage(lang) {
-        const translation = translations[lang];
-        document.getElementById('status').innerText = lastResult ? (lastResult === 'heads' ? translation.heads : translation.tails) : translation.status;
-        document.getElementById('flip').innerText = translation.flip;
-        updateSignalAccuracy();
-        updateCountdown();
-    }
-
-    let isTailsUp = false;
-    let cooldownEndTime = 0;
-
     function updateCooldown() {
         updateCountdown();
-        requestAnimationFrame(updateCooldown);
+        if (isCooldownActive) {
+            requestAnimationFrame(updateCooldown);
+        }
     }
 
     flipButton.addEventListener('click', function () {
         const coin = document.getElementById('coin');
 
-        if (flipButton.disabled) return;
-
-        status.innerText = translations[currentLanguage].wait;
+        // Сразу отключаем кнопку
         flipButton.disabled = true;
         flipButton.classList.add('disabled');
+        isCooldownActive = true;
 
+        // Устанавливаем статус на "WAIT..."
+        status.innerText = translations[currentLanguage].wait;
+
+        // Ожидание 1500 мс перед запуском всех других действий, включая таймер и прогресс бар
         setTimeout(() => {
+            // Запускаем таймер обратного отсчета и прогресс бар с задержкой
             cooldownEndTime = Date.now() + 9000;
-            updateCooldown();
+            requestAnimationFrame(updateCooldown);
 
+            // Запускаем анимацию и обновляем статус
             coin.classList.remove('animate-heads-to-heads', 'animate-heads-to-tails', 'animate-tails-to-tails', 'animate-tails-to-heads');
             coin.style.animation = 'none';
             coin.offsetHeight;
             coin.style.animation = '';
-            status.classList.remove('pulse-once');
 
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
             lastResult = result;
@@ -198,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 signalAccuracyElement.offsetWidth;
                 signalAccuracyElement.classList.add('pulse-once');
             }, 1400);
-        }, 1500);
+        }, 1500); // Все события, включая таймер и прогресс бар, срабатывают через 1500 мс
     });
 
     updateLanguage(currentLanguage);
