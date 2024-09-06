@@ -1,0 +1,401 @@
+@font-face {
+    font-family: 'Halvar Breitschrift';
+    src: url('fonts/halvar_breitschrift.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    touch-action: none; /* Отключаем стандартные жесты, такие как зум */
+    user-select: none;  /* Отключаем выделение текста */
+    -webkit-user-select: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Отключаем прокрутку */
+    position: fixed;
+}
+
+body {
+    -webkit-text-size-adjust: 100%;
+    background-color: #090F1E;
+    color: #FFFFFF;
+    font-family: 'Halvar Breitschrift', sans-serif;
+    font-size: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    margin-top: 2.5rem;
+    flex-direction: column;
+    align-items: center; /* Центрируем все элементы по горизонтали */
+}
+
+#status {
+    margin-bottom: -0.2rem; /* Добавляем отступ снизу, чтобы текст не перекрывал контейнер */
+    width: 420px; /* Устанавливаем фиксированную ширину */
+    height: 60px; /* Устанавливаем фиксированную высоту */
+    display: flex; /* Центрируем текст по горизонтали и вертикали */
+    align-items: center; /* Центрируем текст по вертикали */
+    justify-content: center; /* Центрируем текст по горизонтали */
+    font-size: 44px; /* Устанавливаем размер шрифта */
+    font-weight: bold; /* Устанавливаем жирность шрифта */
+    z-index: -2;
+}
+
+#signal-accuracy {
+    color: #9D9FA5;
+    font-size: 14px;
+    margin-bottom: 2rem;
+    font-family: "Microsoft Sans Serif", Arial, sans-serif;
+    z-index: 0;
+}
+
+#coin-container {
+    position: relative;
+    display: flex;
+    align-items: center; /* Центрируем кольцо и монетку по вертикали */
+    justify-content: center; /* Центрируем кольцо и монетку по горизонтали */
+    z-index: -2;
+}
+
+#ring {
+    background-image: url(images/ring.png); /* Путь к вашему изображению кольца */
+    background-size: cover; /* Изображение кольца полностью покрывает элемент */
+    background-repeat: no-repeat;
+    position: absolute;
+    width: 15.2rem; /* Размер кольца, немного больше монетки */
+    height: 15.2rem; /* Размер кольца, немного больше монетки */
+    top: 49.6%;
+    left: 49.6%;
+    transform: translate(-50%, -50%); /* Центрируем кольцо относительно монетки */
+}
+
+#ellipse {
+    position: absolute;
+    width: 15.2rem; /* Ширина эллипса */
+    height: 15.2rem; /* Высота эллипса */
+    background-color: #090F1E   ; /* Цвет эллипса совпадает с цветом фона сайта */
+    border-radius: 50%; /* Закругляем углы, чтобы получить эллипс */
+    top: 49.6%;
+    left: 49.6%;
+    transform: translate(-50%, -50%); /* Центрируем эллипс под кольцом */
+    z-index: -2; /* Эллипс будет под кольцом и монеткой */
+}
+
+#gradient-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70rem; /* ширина в rem */
+    height: 50rem; /* высота в rem */
+    background: radial-gradient(ellipse at center, rgba(21, 27, 46, 1) 20%, rgba(21, 27, 46, 0) 50%);
+    z-index: -2; /* На заднем плане, ниже остальных элементов */
+}
+
+#coin {
+    position: relative;
+    width: 13rem;
+    height: 13rem;
+    transform-style: preserve-3d;
+}
+
+#coin div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    backface-visibility: hidden;
+    background-size: cover; /* Изображение монеты полностью покрывает элемент */
+    background-position: center; /* Центрируем изображение монеты */
+}
+
+#coin .heads {
+    background-image: url(images/heads.png);
+    transform: rotateY(0deg);
+}
+
+#coin .tails {
+    background-image: url(images/tails.png);
+    transform: rotateY(180deg);
+}
+
+button {
+    padding: 1.3rem;
+    background-color: #063aee;
+    border: none;
+    border-radius: 30px;
+    color: #FFF;
+    font-size: 16px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2.2rem;
+    box-shadow: 0 0px 6px #557aff66;
+    overflow: visible; /* Изменяем на visible, чтобы тень не обрезалась */
+    margin-bottom: 0rem; /* Добавляем отступ снизу, чтобы дать место тени */
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: "Microsoft Sans Serif", Arial, sans-serif;
+    z-index: 0;
+}
+
+button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+    box-shadow: 0 0px 6px grey;
+    z-index: 0;
+}
+
+/* Heads to Heads */
+.animate-heads-to-heads {
+    animation: flipHeadsToHeads 2s forwards;
+}
+
+/* Heads to Tails */
+.animate-heads-to-tails {
+    animation: flipHeadsToTails 2s forwards;
+}
+
+/* Tails to Tails */
+.animate-tails-to-tails {
+    animation: flipTailsToTails 2s forwards;
+}
+
+/* Tails to Heads */
+.animate-tails-to-heads {
+    animation: flipTailsToHeads 2s forwards;
+}
+
+/* Keyframes for animations */
+@keyframes flipHeadsToHeads {
+    0% {
+        transform: rotateY(0deg);
+        bottom: 0px;
+    }
+    35% {
+        bottom: 7px;
+    }
+    70% {
+        transform: rotateY(1080deg); /* 4 оборота */
+        bottom: 0px;
+    }
+    85% {
+        transform: scale(1.025);
+    }
+    100% {
+        transform: rotateY(1080deg);
+    }
+}
+
+@keyframes flipHeadsToTails {
+    0% {
+        transform: rotateY(0deg);
+        bottom: 0px;
+    }
+    35% {
+        bottom: 7px;
+    }
+    70% {
+        transform: rotateY(900deg); /* 3.5 оборота */
+        bottom: 0px;
+    }
+    85% {
+        transform: rotateY(900deg) scale(1.025); /* Добавляем scale вместе с углом */
+    }
+    100% {
+        transform: rotateY(900deg); /* Только угол в конце */
+    }
+}
+
+@keyframes flipTailsToTails {
+    0% {
+        transform: rotateY(180deg);
+        bottom: 0px;
+    }
+    35% {
+        bottom: 7px;
+    }
+    70% {
+        transform: rotateY(1260deg); /* 4 оборота */
+        bottom: 0px;
+    }
+    85% {
+        transform: rotateY(1260deg) scale(1.025); /* Добавляем scale вместе с углом */
+    }
+    100% {
+        transform: rotateY(1260deg); /* Только угол в конце */
+    }
+}
+
+@keyframes flipTailsToHeads {
+    0% {
+        transform: rotateY(180deg);
+        bottom: 0px;
+    }
+    35% {
+        bottom: 7px;
+    }
+    70% {
+        transform: rotateY(1080deg); /* 3.5 оборота */
+        bottom: 0px;
+    }
+    85% {
+        transform: rotateY(1080deg) scale(1.025); /* Добавляем scale вместе с углом */
+    }
+    100% {
+        transform: rotateY(1080deg); /* Только угол в конце */
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.025);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-once {
+    animation: pulse 0.6s ease-out;
+}
+
+/* Добавляем стили для переключения языков */
+.language-selector {
+    position: absolute;
+    grid-template-columns: 1;
+    grid-template-rows: 1;
+    grid-gap: 10px;
+    padding: 10px;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+.full-width-line {
+    width: 100%;
+    height: 1px;
+    background-color: #3c435b;
+    opacity: 50%;
+    position: absolute;
+    top: 77px; /* Линия на высоте 77 пикселов от верхнего края */
+    left: 0;
+    z-index: 2; /* Убедимся, что линия будет выше других элементов */
+}
+
+/* Размер иконки языка */
+:root {
+    --language-icon-width: 2.4rem; /* Размер иконки увеличен на 10% */
+    --language-icon-height: 1.65rem; /* Размер иконки увеличен на 10% */
+}
+
+/* Стиль для кнопки текущего языка */
+#language-icon {
+    width: var(--language-icon-width);
+    height: var(--language-icon-height);
+    cursor: pointer;
+    outline: none; /* Убираем обводку при фокусе */
+    user-select: none; /* Отключаем выделение текста/элемента */
+    -webkit-tap-highlight-color: transparent; /* Убираем выделение цветом на мобильных устройствах */
+    border-radius: 0.5rem; /* Закругляем края увеличено на 10% */
+    background-color: #1f2639; /* Цвет фона */
+    border: 1px solid #34405e; /* Цвет рамки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem; /* Добавляем внутренние отступы увеличены на 10% */
+    z-index: 4;
+}
+
+/* Стили для выпадающего списка языков */
+#language-dropdown {
+    position: absolute;
+    top: 10px; /* Отступ сверху увеличен на 10% */
+    right: 10px; /* Отступ справа увеличен на 10% */
+    display: none; /* Скрываем по умолчанию */
+    grid-template-columns: repeat(2, calc(var(--language-icon-width) + 0.6rem)); /* Две колонки с увеличенной областью */
+    grid-template-rows: repeat(3, calc(var(--language-icon-height) + 0.6rem)); /* Три строки с увеличенной областью */
+    grid-gap: 0.1rem; /* Зазор между элементами увеличен на 10% */
+    background-color: #1f2639;
+    border: 1px solid #34405e; /* Цвет рамки */
+    border-radius: 0.5rem; /* Закругляем углы */
+    padding: 0rem; /* Внутренние отступы */
+    z-index: 4;
+}
+
+/* Стили для иконок языков в выпадающем списке */
+#language-dropdown img {
+    width: var(--language-icon-width); /* Сохраняем размер иконки увеличенным */
+    height: var(--language-icon-height); /* Сохраняем размер иконки увеличенным */
+    padding: 0.3rem; /* Добавляем внутренние отступы для увеличения кликабельной области увеличены на 10% */
+    cursor: pointer;
+    outline: none; /* Убираем обводку при фокусе */
+    z-index: 4;
+}
+
+.logo-container {
+    position: absolute;
+    top: 22px;
+    left: 20px;
+    z-index: 2;
+}
+
+.logo-wrapper {
+    width: 70px; /* Ширина области */
+    height: 32px; /* Высота области */
+    cursor: pointer; /* Указатель мыши при наведении */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Логотип будет скрыт, если он выходит за границы */
+    z-index: 2;
+}
+
+#logo-1win {
+    width: 70px; /* Ширина логотипа */
+    height: 32px;
+    display: block;
+}
+
+.menu-bar {
+    width: 100%;
+    height: 78px;
+    position: absolute;
+    top: 0;
+    background-color: #090F1E;
+    z-index: 1;
+}
+
+#progress-bar-container {
+    width: 40%;
+    height: 5px;
+    background-color: #ddd;
+    margin-top: 1rem;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background-color: #063aee;
+    transition: width 100%;
+}
+
+#countdown {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #9D9FA5;
+    opacity: 80%;
+    font-family: "Microsoft Sans Serif", Arial, sans-serif;
+}
