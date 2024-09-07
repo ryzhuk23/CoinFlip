@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBar = document.getElementById('progress-bar');
     let currentLanguage = 'en';
     let lastResult = '';
-    let accuracy = '?';
+    let accuracy = '+86';
     let cooldownEndTime = 0;
     let isCooldownActive = false;
     let isTailsUp = false;
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tails: 'РЕШКА',
             flip: 'Получить Сигнал',
             accuracy: 'Точность сигнала: ',
-            countdown: 'Осталось',
+            countdown: 'Осталось:',
             wait: 'ЖДИТЕ...'
         },
         en: {
@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tails: 'पूंछ',
             flip: 'सिग्नल प्राप्त करें',
             accuracy: 'सिग्नल सटीकता: ',
-            countdown: 'सेकंड बचा',
-            wait: 'प्रतीक्षा करें...'
+            countdown: 'सेकंड बचा:',
+            wait: 'रुको...'
         },
         pt: {
             status: 'VORTEX',
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tails: 'CAUDAS',
             flip: 'Receber Sinal',
             accuracy: 'Precisão do sinal: ',
-            countdown: 'Restante',
+            countdown: 'Restante:',
             wait: 'AGUARDE...'
         },
         es: {
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tails: 'CRUZ',
             flip: 'Recibir Señal',
             accuracy: 'Precisión de la señal: ',
-            countdown: 'Restantes',
+            countdown: 'Restantes:',
             wait: 'ESPERE...'
         },
         tr: {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tails: 'YAZI',
             flip: 'Sinyal Al',
             accuracy: 'Sinyal Doğruluğu: ',
-            countdown: 'Kaldı',
+            countdown: 'Kaldı:',
             wait: 'BEKLEYIN...'
         }
     };
